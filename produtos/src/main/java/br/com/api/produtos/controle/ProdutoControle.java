@@ -38,4 +38,9 @@ public class ProdutoControle {
     public Iterable<ProdutoModelo> listar() {
         return servico.listar();
     }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<?> cadastrar(@RequestBody ProdutoModelo modelo){
+        return servico.cadastrar(modelo);
+    }
 }

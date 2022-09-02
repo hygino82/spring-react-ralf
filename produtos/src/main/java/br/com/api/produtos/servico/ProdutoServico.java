@@ -3,33 +3,32 @@ package br.com.api.produtos.servico;
 import br.com.api.produtos.dto.InserirProdutoDTO;
 import br.com.api.produtos.dto.ProdutoDTO;
 import br.com.api.produtos.modelo.ProdutoModelo;
+import br.com.api.produtos.modelo.RespostaModelo;
 import br.com.api.produtos.repositorio.ProdutoRepositorio;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class ProdutoServico {
+    @Autowired
+    private ProdutoRepositorio repositorio;
 
-    private final ProdutoRepositorio repositorio;
-    private final ModelMapper mapper;
+    @Autowired
+    private ModelMapper mapper;
 
-    public ProdutoServico(ProdutoRepositorio repositorio, ModelMapper mapper) {
-        this.repositorio = repositorio;
-        this.mapper = mapper;
-    }
+    @Autowired
+    private RespostaModelo respostaModelo;
 
     public Page<ProdutoDTO> buscarTodos(Pageable pageable) {
         Page<ProdutoModelo> page = repositorio.findAll(pageable);
 
         return page.map(x -> mapper.map(x, ProdutoDTO.class));
-    }
-
-
-    public Iterable<ProdutoModelo> listar() {
-        return repositorio.findAll();
     }
 
     public ProdutoDTO inserirProduto(InserirProdutoDTO obj) {
@@ -38,6 +37,33 @@ public class ProdutoServico {
         modelo = repositorio.save(modelo);
 
         return mapper.map(modelo, ProdutoDTO.class);
+    }
+
+
+    public Iterable<ProdutoModelo> listar() {
+        return repositorio.findAll();
+    }
+
+    public ResponseEntity<?> cadastrar(ProdutoModelo modelo) {
+        //evita null pointer exception
+        if (modelo.getNome() == null) {
+            modelo.setNome("");
+        }
+
+        if (modelo.getMarca() == null) {
+            modelo.setMarca("");
+        }
+
+        if (modelo.getNome().equals("")) {
+            respostaModelo.setMensagem("O nome do produto é obrigatório!");
+            return new ResponseEntity<RespostaModelo>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } else if (modelo.getMarca().equals("")) {
+            respostaModelo.setMensagem("O nome da marca do produto é obrigatório!");
+            return new ResponseEntity<RespostaModelo>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } else {
+            modelo = repositorio.save(modelo);
+            return new ResponseEntity<ProdutoModelo>(modelo, HttpStatus.CREATED);
+        }
     }
 }
 
