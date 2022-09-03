@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/produto")
+@CrossOrigin(origins = "*")
 public class ProdutoControle {
 
     private final ProdutoServico servico;
@@ -29,7 +30,7 @@ public class ProdutoControle {
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<?> buscarPorCodigo(@PathVariable Long codigo){
+    public ResponseEntity<?> buscarPorCodigo(@PathVariable Long codigo) {
         return servico.buscarPorCodigo(codigo);
     }
 
@@ -67,7 +68,7 @@ public class ProdutoControle {
     }
 
     @DeleteMapping("/remover/{codigo}")
-    public ResponseEntity<?> remover(@PathVariable Long codigo){
+    public ResponseEntity<?> remover(@PathVariable Long codigo) {
         return servico.remover(codigo);
     }
 }

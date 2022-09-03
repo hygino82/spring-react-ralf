@@ -28,7 +28,7 @@ public class ProdutoServico {
     private RespostaModelo respostaModelo;
 
     public Page<ProdutoDTO> buscarTodos(Pageable pageable) {
-        
+
         Page<ProdutoModelo> page = repositorio.findAll(pageable);
 
         return page.map(x -> mapper.map(x, ProdutoDTO.class));
