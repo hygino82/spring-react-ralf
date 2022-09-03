@@ -76,8 +76,20 @@ public class ProdutoServico {
         modelo.setNome(obj.getNome());
         modelo.setMarca(obj.getMarca());
         modelo = repositorio.save(modelo);
-        
+
         return mapper.map(modelo, ProdutoDTO.class);
+    }
+
+    public ResponseEntity<RespostaModelo> remover(Long codigo) {
+        repositorio.deleteById(codigo);
+        respostaModelo.setMensagem("O produto foi removido com sucesso!");
+
+        return new ResponseEntity<RespostaModelo>(respostaModelo, HttpStatus.OK);
+    }
+
+    public void removerProduto(Long codigo) {
+        ProdutoModelo modelo = repositorio.getReferenceById(codigo);
+        repositorio.delete(modelo);
     }
 }
 

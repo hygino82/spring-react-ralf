@@ -35,6 +35,11 @@ public class ProdutoControle {
         return ResponseEntity.ok().body(dto);
     }
 
+    @DeleteMapping("/{codigo}")
+    public void removerProduto(@PathVariable Long codigo) {
+        servico.removerProduto(codigo);
+    }
+
     @PutMapping("/{codigo}")
     public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable Long codigo, @RequestBody InserirProdutoDTO obj) {
         ProdutoDTO dto = servico.atualizarProduto(codigo, obj);
@@ -54,5 +59,10 @@ public class ProdutoControle {
     @PutMapping("/alterar")
     public ResponseEntity<?> alterar(@RequestBody ProdutoModelo modelo) {
         return servico.cadastrarAlterar(modelo, "alterar");
+    }
+
+    @DeleteMapping("/remover/{codigo}")
+    public ResponseEntity<?> remover(@PathVariable Long codigo){
+        return servico.remover(codigo);
     }
 }
