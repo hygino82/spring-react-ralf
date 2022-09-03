@@ -44,7 +44,8 @@ public class ProdutoServico {
         return repositorio.findAll();
     }
 
-    public ResponseEntity<?> cadastrar(ProdutoModelo modelo) {
+    //método para cadastrar ou alterar produto
+    public ResponseEntity<?> cadastrarAlterar(ProdutoModelo modelo, String acao) {
         //evita null pointer exception
         if (modelo.getNome() == null) {
             modelo.setNome("");
@@ -62,8 +63,21 @@ public class ProdutoServico {
             return new ResponseEntity<RespostaModelo>(respostaModelo, HttpStatus.BAD_REQUEST);
         } else {
             modelo = repositorio.save(modelo);
-            return new ResponseEntity<ProdutoModelo>(modelo, HttpStatus.CREATED);
+            if (acao.equals("cadastrar")) {
+                return new ResponseEntity<ProdutoModelo>(modelo, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<ProdutoModelo>(modelo, HttpStatus.OK);
+            }
         }
+    }
+
+    public ProdutoDTO atualizarProduto(Long codigo, InserirProdutoDTO obj) {
+        ProdutoModelo modelo = repositorio.getReferenceById(codigo);
+        modelo.setNome(obj.getNome());
+        modelo.setMarca(obj.getMarca());
+        modelo = repositorio.save(modelo);
+        
+        return mapper.map(modelo, ProdutoDTO.class);
     }
 }
 

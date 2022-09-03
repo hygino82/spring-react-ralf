@@ -6,6 +6,7 @@ import br.com.api.produtos.modelo.ProdutoModelo;
 import br.com.api.produtos.servico.ProdutoServico;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +35,24 @@ public class ProdutoControle {
         return ResponseEntity.ok().body(dto);
     }
 
+    @PutMapping("/{codigo}")
+    public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable Long codigo, @RequestBody InserirProdutoDTO obj) {
+        ProdutoDTO dto = servico.atualizarProduto(codigo, obj);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
     @GetMapping("/listar")
     public Iterable<ProdutoModelo> listar() {
         return servico.listar();
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrar(@RequestBody ProdutoModelo modelo){
-        return servico.cadastrar(modelo);
+    public ResponseEntity<?> cadastrar(@RequestBody ProdutoModelo modelo) {
+        return servico.cadastrarAlterar(modelo, "cadastrar");
+    }
+
+    @PutMapping("/alterar")
+    public ResponseEntity<?> alterar(@RequestBody ProdutoModelo modelo) {
+        return servico.cadastrarAlterar(modelo, "alterar");
     }
 }
