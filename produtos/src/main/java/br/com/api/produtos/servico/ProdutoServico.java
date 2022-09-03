@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class ProdutoServico {
@@ -26,12 +28,14 @@ public class ProdutoServico {
     private RespostaModelo respostaModelo;
 
     public Page<ProdutoDTO> buscarTodos(Pageable pageable) {
+        
         Page<ProdutoModelo> page = repositorio.findAll(pageable);
 
         return page.map(x -> mapper.map(x, ProdutoDTO.class));
     }
 
     public ProdutoDTO inserirProduto(InserirProdutoDTO obj) {
+
         ProdutoModelo modelo = new ProdutoModelo();
         modelo = mapper.map(obj, ProdutoModelo.class);
         modelo = repositorio.save(modelo);
@@ -72,6 +76,7 @@ public class ProdutoServico {
     }
 
     public ProdutoDTO atualizarProduto(Long codigo, InserirProdutoDTO obj) {
+
         ProdutoModelo modelo = repositorio.getReferenceById(codigo);
         modelo.setNome(obj.getNome());
         modelo.setMarca(obj.getMarca());
@@ -81,6 +86,7 @@ public class ProdutoServico {
     }
 
     public ResponseEntity<RespostaModelo> remover(Long codigo) {
+
         repositorio.deleteById(codigo);
         respostaModelo.setMensagem("O produto foi removido com sucesso!");
 
@@ -88,8 +94,19 @@ public class ProdutoServico {
     }
 
     public void removerProduto(Long codigo) {
+
         ProdutoModelo modelo = repositorio.getReferenceById(codigo);
         repositorio.delete(modelo);
+    }
+
+    public ResponseEntity<?> buscarPorCodigo(Long codigo) {
+
+        Optional<ProdutoModelo> produto = repositorio.findByCodigo(codigo);
+        if (produto.isPresent()) {
+            var dto = mapper.map(produto, ProdutoDTO.class);
+            return new ResponseEntity<ProdutoDTO>(dto, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Produto não encontado", HttpStatus.NOT_FOUND);
     }
 }
 

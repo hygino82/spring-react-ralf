@@ -28,6 +28,11 @@ public class ProdutoControle {
         return ResponseEntity.ok().body(pageDto);
     }
 
+    @GetMapping("/{codigo}")
+    public ResponseEntity<?> buscarPorCodigo(@PathVariable Long codigo){
+        return servico.buscarPorCodigo(codigo);
+    }
+
     @PostMapping
     public ResponseEntity<ProdutoDTO> inserirProduto(@RequestBody InserirProdutoDTO obj) {
         ProdutoDTO dto = servico.inserirProduto(obj);
