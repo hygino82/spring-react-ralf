@@ -1,27 +1,4 @@
-function Tabela() {
-    const lista = [
-        {
-            codigo: 1,
-            nome: 'Maionese',
-            marca: 'Soya'
-        },
-        {
-            codigo: 2,
-            nome: 'Pizza',
-            marca: 'Sadia'
-        },
-        {
-            codigo: 3,
-            nome: 'Leite',
-            marca: 'Tirol'
-        },
-        {
-            codigo: 4,
-            nome: 'Mortadela',
-            marca: 'Aurora'
-        }
-    ];
-
+function Tabela({ vetor }) {
     return (
         <table className="table table-striped">
             <thead>
@@ -33,12 +10,14 @@ function Tabela() {
                 </tr>
             </thead>
             <tbody>
-                {lista.map(x =>
-                    <tr>
-                        <td>{x.codigo}</td>
-                        <td>{x.nome}</td>
-                        <td>{x.marca}</td>
-                        <td>Ação</td>
+                {vetor.map((obj, indice) =>
+                    <tr key={indice}>
+                        <td>{indice + 1}</td>
+                        <td>{obj.nome}</td>
+                        <td>{obj.marca}</td>
+                        <td>
+                            <button className="btn btn-success">Selecionar</button>
+                        </td>
                     </tr>
                 )}
             </tbody>
