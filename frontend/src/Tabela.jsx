@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Tabela() {
     const lista = [
         {
@@ -25,7 +23,7 @@ function Tabela() {
     ];
 
     return (
-        <table className="table">
+        <table className="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
